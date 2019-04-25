@@ -42,7 +42,7 @@ class Trainer:
     def flowdir(self):
         imagelist = os.listdir(self.imagedir)
         imagelist = np.random.permutation(imagelist)
-        labellist = [os.path.join(self.labeldir,fn.split(".")[0]) for fn in imagelist]
+        labellist = [os.path.join(self.labeldir,fn.split(".")[0]+'.xml') for fn in imagelist]
         batchsize = 20
         pos=0
         batch=0

@@ -9,6 +9,7 @@ xy_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])
 wh_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])
 mask_box = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,1])
 cls_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,20])
+box_num = tf.reduce_sum(mask_box)
 wh_ta = wh_t/np.array(anchors)#[None,7,7,5,2]
 logwh_t = tf.log(tf.maximum(wh_ta,1e-2))#[None,7,7,5,2]
 #aa = tf.cast(tf.stack(tf.meshgrid(tf.range(th),tf.range(th)),axis=-1),tf.float32)
@@ -22,9 +23,9 @@ logwh = tf.clip_by_value(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]]
 iou_p = tf.nn.sigmoid(tf.reshape(detector_out[...,20:25],tf.concat([ts,[5]],axis=0)))#[None,7,7,5]
 cls = tf.nn.softmax(detector_out[...,25:])#[None,7,7,20]
 
-xyerr = tf.reduce_mean(tf.reduce_sum((xy-xy_t)**2 * mask_box,axis=-1))*5.
-wherr = tf.reduce_mean(tf.reduce_sum((logwh-logwh_t)**2 * mask_box,axis=-1))*5.
-clserr = tf.reduce_mean(tf.reduce_sum((cls-cls_t)**2 * cls_t,axis=-1))
+xyerr = tf.reduce_sum((xy-xy_t)**2 * mask_box)/box_num*5.
+wherr = tf.reduce_sum((logwh-logwh_t)**2 * mask_box)/box_num*5.
+clserr = tf.reduce_sum((cls-cls_t)**2 * cls_t)/box_num
 
 wh = tf.exp(logwh)*np.array(anchors)#[None,7,7,5,2]
 coordxy = (xy+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th)),axis=-1),axis=2))/th#[None,7,7,5,2]

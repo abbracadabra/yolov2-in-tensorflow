@@ -34,7 +34,7 @@ sect = tf.nn.relu(tf.multiply(*tf.unstack(tf.minimum(rt_t,rt)-tf.maximum(lf_t,lf
 union = tf.maximum(tf.multiply(*tf.unstack(rt-lf,axis=-1))+tf.multiply(*tf.unstack(rt_t-lf_t,axis=-1))-sect,1e-2)#[None,7,7,5]
 iou_t = sect/union#[None,7,7,5]
 mask_box_s = tf.squeeze(mask_box)#[None,7,7,5]
-iouerr = tf.reduce_sum((iou_p-iou_t)**2 * tf.where(tf.equal(mask_box_s,1.),mask_box_s,tf.ones_like(mask_box_s)*0.5))/box_num
+iouerr = tf.reduce_mean((iou_p-iou_t)**2 * tf.where(tf.equal(mask_box_s,1.),mask_box_s,tf.ones_like(mask_box_s)*0.5))
 
 allerr = xyerr+wherr+clserr+iouerr
 

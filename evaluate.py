@@ -18,11 +18,11 @@ _inp = vgg16.predict(keras.applications.vgg16.preprocess_input(np.array([im])),b
 _xy,_wh,_iou,_cls = sess.run([xy,wh,iou_p,cls],feed_dict={detector_inp:_inp})
 
 grid=np.meshgrid(np.arange(7),np.arange(7),indexing='ij')
-_xy = np.reshape(_xy/7+np.stack((grid[0],grid[1]),axis=-1)*(1/7),[-1,2])
-_wh = np.reshape(np.power(_wh,2),[-1,2])
+_xy = np.reshape(_xy/7+np.expand_dims(np.stack(grid,axis=-1)*(1/7),axis=2),[-1,2])
+_wh = np.reshape(_wh,[-1,2])
 _clsprob = np.max(_cls,axis=-1,keepdims=True)
-score = np.reshape(_obj*_clsprob,[-1])
-_cls = np.reshape(np.argmax(_cls,axis=-1),[-1])
+score = np.reshape(_iou*_clsprob,[-1])
+_cls = np.reshape(np.tile(np.expand_dims(np.argmax(_cls,axis=-1),axis=-1),[1,1,1,5]),[-1])
 pack = [z for z in zip(score,_xy,_cls,_wh)]
 pack = [z for z in pack if z[0]>0.5 and z[3][0]>0.01 and z[3][1]>0.01]
 pack = [pack[i] for i in np.argsort([z[0] for z in pack])[::-1]]

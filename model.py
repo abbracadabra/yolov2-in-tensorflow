@@ -8,25 +8,22 @@ th = tf.cast(tf.shape(detector_inp)[1],tf.float32)
 xy_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])
 wh_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])
 mask_box = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,1])
-box_num = tf.reduce_sum(mask_box)
+box_num = tf.maximum(tf.reduce_sum(mask_box),1.)
 cls_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,20])
-wh_ta = wh_t/np.array(anchors)#[None,7,7,5,2]
-logwh_t = tf.log(tf.maximum(wh_ta,1e-2))#[None,7,7,5,2]
 coordxy_t = (xy_t+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th)),axis=-1),axis=2))/th#[None,7,7,5,2]
 lf_t = tf.clip_by_value(coordxy_t-wh_t/2,0.,1.)#[None,7,7,5,2]
 rt_t = tf.clip_by_value(coordxy_t+wh_t/2,0.,1.)#[None,7,7,5,2]
 
 detector_out = tf.layers.conv2d(detector_inp,45,(1,1))#[None,7,7,45]
 xy = tf.nn.sigmoid(tf.reshape(detector_out[...,0:10],tf.concat([ts,[5,2]],axis=0)))#[None,7,7,5,2]
-logwh = tf.clip_by_value(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0)),-2.,2.)#[None,7,7,5,2]
+wh = tf.clip_by_value(tf.exp(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0)))*np.array(anchors),0.,1.)#[None,7,7,5,2]
 iou_p = tf.nn.sigmoid(tf.reshape(detector_out[...,20:25],tf.concat([ts,[5]],axis=0)))#[None,7,7,5]
 cls = tf.nn.softmax(detector_out[...,25:])#[None,7,7,20]
 
 xyerr = tf.reduce_sum((xy-xy_t)**2 * mask_box)/box_num
-wherr = tf.reduce_sum((logwh-logwh_t)**2 * mask_box)/box_num
+wherr = tf.reduce_sum((wh-wh_t)**2 * mask_box)/box_num
 clserr = tf.reduce_sum((cls-cls_t)**2 * cls_t)/box_num
 
-wh = tf.exp(logwh)*np.array(anchors)#[None,7,7,5,2]
 coordxy = (xy+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th)),axis=-1),axis=2))/th#[None,7,7,5,2]
 lf = tf.clip_by_value(coordxy-wh/2,0.,1.)#[None,7,7,5,2]
 rt = tf.clip_by_value(coordxy+wh/2,0.,1.)#[None,7,7,5,2]

@@ -17,7 +17,7 @@ vgg16 = keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', in
 for i in range(epochs):
     for j, (ims,_xy,_wh,_mask,_cls) in enumerate(getbatch()):
         _inp = vgg16.predict(keras.applications.vgg16.preprocess_input(ims),batch_size=len(ims))
-        _ll,_ty,_ii,e1,e2,e3,e4,_err,_log,_ = sess.run([logwh,logwh_t,union,xyerr,wherr,iouerr,clserr,allerr,log_all,ops],feed_dict={detector_inp:_inp,
+        _ii,e1,e2,e3,e4,_err,_log,_ = sess.run([detector_out,xyerr,wherr,iouerr,clserr,allerr,log_all,ops],feed_dict={detector_inp:_inp,
                                          xy_t:_xy,
                                          wh_t:_wh,
                                          mask_box:_mask,

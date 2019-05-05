@@ -125,13 +125,13 @@ def loaddata(impaths, lbpaths,dim=224):
     ret = []
     for impath, lbpath in zip(impaths, lbpaths):
         im = Image.open(os.path.join(vocimdir,impath))
-        imf = im.transpose(PIL.Image.FLIP_LEFT_RIGHT)
+        #imf = im.transpose(PIL.Image.FLIP_LEFT_RIGHT)
         lbmap = loadlabel(lbpath,flip=False)
-        lbmapf = loadlabel(lbpath, flip=True)
-        imhue = randomhue(im)
+        #lbmapf = loadlabel(lbpath, flip=True)
+        #imhue = randomhue(im)
         ret.append(constructlabel(im,lbmap,dim))
-        ret.append(constructlabel(imf, lbmapf,dim))
-        ret.append(constructlabel(imhue, lbmap,dim))
+        #ret.append(constructlabel(imf, lbmapf,dim))
+        #ret.append(constructlabel(imhue, lbmap,dim))
     return ret
 
 def getbatch():

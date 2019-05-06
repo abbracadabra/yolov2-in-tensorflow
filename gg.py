@@ -5,6 +5,18 @@ from tensorflow import keras
 from PIL import Image
 from util import *
 
-im,nw,nh = preparetest(r'D:\Users\yl_gong\Desktop\dl\voc\VOC2012\JPEGImages\2008_000309.jpg',224)
-vgg16 = keras.applications.vgg16.VGG16(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None)
-vgg16.summary()
+aa = tf.placeholder(dtype=tf.float32,shape=[1])
+vv = tf.Variable(initial_value=aa,trainable=True)
+bb = vv**2
+cc = tf.clip_by_value(bb,0,1)
+dd = cc**2
+mi = tf.train.GradientDescentOptimizer(0.001)
+gg = mi.compute_gradients(dd)
+ops = mi.apply_gradients(gg)
+
+
+sess = tf.Session()
+sess.run(tf.global_variables_initializer(),feed_dict={aa:[22.]})
+for i in range(1600):
+    _vc,_, hhh = sess.run([vv,ops, gg])
+    print(hhh)

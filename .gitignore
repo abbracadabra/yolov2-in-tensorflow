@@ -1,4 +1,6 @@
 log/
 mdl/
+__pycache__/
+.idea/
 !log/nodel
 !mdl/nodel

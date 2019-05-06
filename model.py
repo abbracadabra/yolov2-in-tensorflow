@@ -41,7 +41,7 @@ tf.summary.scalar('iouerr',iouerr)
 tf.summary.scalar('clserr',clserr)
 tf.summary.scalar('allerr',allerr)
 log_all = tf.summary.merge_all()
-writer = tf.summary.FileWriter(log_path,graph=tf.get_default_graph())
+
 
 
 

@@ -3,11 +3,9 @@ from model import *
 from util import *
 from tensorflow import keras
 
+writer = tf.summary.FileWriter(log_path,graph=tf.get_default_graph())
 saver = tf.train.Saver()
-optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
-gvs = optimizer.compute_gradients(allerr)
-capped_gvs = [(tf.clip_by_value(grad, -1., 1.) if grad!=None else None , var)  for grad, var in gvs]
-ops = optimizer.apply_gradients(capped_gvs)
+ops = tf.train.AdamOptimizer(learning_rate=0.001).minimize(allerr)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 #saver.restore(sess,model_path)

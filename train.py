@@ -8,7 +8,7 @@ saver = tf.train.Saver()
 ops = tf.train.AdamOptimizer(learning_rate=0.001).minimize(allerr)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
-#saver.restore(sess,model_path)
+saver.restore(sess,model_path)
 
 vgg16 = keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_tensor=None, input_shape=None, pooling=None)
 

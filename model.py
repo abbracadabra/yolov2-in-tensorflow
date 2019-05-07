@@ -3,7 +3,7 @@ from config import *
 import numpy as np
 
 detector_inp = tf.placeholder(dtype=tf.float32,shape=[None,None,None,512],name='input')#[None,7,7,512]
-ts = tf.shape(detector_inp)[:3]
+ts = tf.shape(detector_inp)[:3]#[None,7,7]
 th = tf.cast(tf.shape(detector_inp)[1],tf.float32)
 xy_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])
 wh_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])

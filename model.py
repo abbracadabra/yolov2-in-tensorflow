@@ -16,7 +16,9 @@ rt_t = coordxy_t+wh_t/2#[None,7,7,5,2]
 
 detector_out = tf.layers.conv2d(detector_inp,45,(1,1))#[None,7,7,45]
 xy = tf.sigmoid(tf.reshape(detector_out[...,0:10],tf.concat([ts,[5,2]],axis=0)))#[None,7,7,5,2]
-wh = tf.exp(tf.tanh(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0))))*np.array(anchors)#[None,7,7,5,2]
+#wh = tf.exp(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0)))*np.array(anchors)#[None,7,7,5,2]
+#wh = tf.exp(tf.tanh(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0))))*np.array(anchors)#[None,7,7,5,2]
+wh = 2*tf.sigmoid(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0)))*np.array(anchors)#[None,7,7,5,2]
 iou_p = tf.sigmoid(tf.reshape(detector_out[...,20:25],tf.concat([ts,[5]],axis=0)))#[None,7,7,5]
 cls = tf.nn.softmax(detector_out[...,25:])#[None,7,7,20]
 

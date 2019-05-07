@@ -137,7 +137,7 @@ def loaddata(impaths, lbpaths,dim=224):
 def getbatch():
     imlist = os.listdir(vocimdir)
     imlist = np.random.permutation(imlist)
-    labellist = [os.path.join(voclabeldir, fn.split(".")[0]+".xml") for fn in imlist]
+    labellist = [fn.split(".")[0]+".xml" for fn in imlist]
     pos = 0
     while pos < len(imlist):
         subimlist = imlist[pos:pos + trainbatch]

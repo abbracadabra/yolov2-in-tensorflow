@@ -4,6 +4,11 @@
 - trained on voc2012 for 2 epochs
 - 7\*7 total cells in detector layer,5 box predictors in each cell,total detector size is 7\*7\*(5\*5+20)
 
+## about code
+- train.py #train
+- evaluate.py #predict
+- config.py #config
+
 ## some random non cherry-picked examples out of training data
 <div>
 <img src='https://user-images.githubusercontent.com/35487258/57367790-4a8c2680-71bc-11e9-9f0e-28b6942e9339.jpg'>

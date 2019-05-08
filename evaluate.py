@@ -12,7 +12,7 @@ sess = tf.Session()
 saver = tf.train.Saver()
 saver.restore(sess,model_path)
 
-im,nw,nh = preparetest(r'D:\Users\yl_gong\Desktop\dl\voc\VOCtest_06-Nov-2007\VOCdevkit\VOC2007\JPEGImages\001025.jpg',224)
+im,nw,nh = preparetest(r'D:\Users\yl_gong\Desktop\dl\voc\VOCtest_06-Nov-2007\VOCdevkit\VOC2007\JPEGImages\000080.jpg',224)
 vgg16 = keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_tensor=None, input_shape=None, pooling=None)
 _inp = vgg16.predict(keras.applications.vgg16.preprocess_input(np.array([im])),batch_size=1)
 _xy,_wh,_iou,_cls = sess.run([xy,wh,iou_p,cls],feed_dict={detector_inp:_inp})
@@ -24,7 +24,7 @@ _clsprob = np.max(_cls,axis=-1,keepdims=True)#[none,7,7,1]
 score = np.reshape(_iou*_clsprob,[-1])#[none,7,7,5]
 _cls = np.reshape(np.tile(np.expand_dims(np.argmax(_cls,axis=-1),axis=-1),[1,1,1,5]),[-1])
 pack = [z for z in zip(score,_xy,_cls,_wh)]
-pack = [z for z in pack if z[0]>0.3]
+pack = [z for z in pack if z[0]>0.35]
 pack = [pack[i] for i in np.argsort([z[0] for z in pack])[::-1]]
 print(pack)
 print(len(pack))
@@ -45,7 +45,7 @@ while pos<len(pack):
     while newpos<len(pack):
         newcurr = pack[newpos]
         if curr[2]==newcurr[2]:
-            if iou(curr,newcurr)>0.4:
+            if iou(curr,newcurr)>0.2:
                 del pack[newpos]
                 newpos-=1
         newpos+=1
@@ -59,7 +59,11 @@ draw  = ImageDraw.Draw(im)
 for sc,xy,cs,wh in pack:
     draw.rectangle((tuple(np.clip(xy-wh/2,0,1)*224), tuple(np.clip(xy+wh/2,0,1)*224)),width=1)
     draw.text(tuple(np.clip(xy-wh/2,0,1)*224), str(round(sc,2))+"/"+labels[cs], font=ImageFont.truetype("arial",14),fill="red")
-im.show()
+#im.show()
+
+import time
+time.time()
+im.save(os.path.join(r'D:\Users\yl_gong\Desktop\tp',str(round(time.time() * 1000))+'.jpg'))
 
 
 

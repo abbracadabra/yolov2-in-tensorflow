@@ -2,7 +2,7 @@
 - implementation of yolov2 concepts,but not 100% in accordance with all details
 - vgg16 as image decoder
 - trained on voc2012 for 2 epochs
-- 7\*7 total cells in detector layer,5 box predictors in each cell,total detector size is 7\*7\*(5\*5+20)
+- 7\*7 total cells in detection layer,5 box predictors in each cell,total detection layer size is 7\*7\*(5\*5+20)
 
 ## about code
 - train.py #train

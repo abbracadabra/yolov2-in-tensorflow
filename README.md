@@ -5,6 +5,7 @@
 - 7*7 total cells in detector layer,5 box predictors in each cell,total detector size is 7*7*(5*5+20)
 
 ## some non cherry-picked examples out of training data
+<div>
 <img display='inline' src='https://user-images.githubusercontent.com/35487258/57367790-4a8c2680-71bc-11e9-9f0e-28b6942e9339.jpg'>
 <img display='inline' src='https://user-images.githubusercontent.com/35487258/57367791-4b24bd00-71bc-11e9-9d92-5f8b31478f1e.jpg'>
 <img src='https://user-images.githubusercontent.com/35487258/57367792-4b24bd00-71bc-11e9-83ee-38595afb08eb.jpg'>
@@ -33,3 +34,4 @@
 <img src='https://user-images.githubusercontent.com/35487258/57367836-5677e880-71bc-11e9-934e-b29a1d914516.jpg'>
 <img src='https://user-images.githubusercontent.com/35487258/57367838-5677e880-71bc-11e9-9671-7d9ed391aec1.jpg'>
 <img src='https://user-images.githubusercontent.com/35487258/57367839-57a91580-71bc-11e9-9a06-29a799e7cbf0.jpg'>
+</div>

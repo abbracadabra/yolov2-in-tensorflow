@@ -6,7 +6,7 @@
 
 ## some non cherry-picked examples out of training data
 <div>
-<img display='inline' src='https://user-images.githubusercontent.com/35487258/57367790-4a8c2680-71bc-11e9-9f0e-28b6942e9339.jpg'>
+<img display='inline' width='50%' src='https://user-images.githubusercontent.com/35487258/57367790-4a8c2680-71bc-11e9-9f0e-28b6942e9339.jpg'>
 <img display='inline' src='https://user-images.githubusercontent.com/35487258/57367791-4b24bd00-71bc-11e9-9d92-5f8b31478f1e.jpg'>
 <img src='https://user-images.githubusercontent.com/35487258/57367792-4b24bd00-71bc-11e9-83ee-38595afb08eb.jpg'>
 <img src='https://user-images.githubusercontent.com/35487258/57367793-4bbd5380-71bc-11e9-8e2d-4e2b003d47d4.jpg'>

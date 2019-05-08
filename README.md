@@ -9,7 +9,7 @@
 - evaluate.py #predict
 - config.py #config
 
-## some random non cherry-picked examples out of training data
+## some random non cherry-picked test examples
 <div>
 <img src='https://user-images.githubusercontent.com/35487258/57367790-4a8c2680-71bc-11e9-9f0e-28b6942e9339.jpg'>
 <img src='https://user-images.githubusercontent.com/35487258/57367791-4b24bd00-71bc-11e9-9d92-5f8b31478f1e.jpg'>

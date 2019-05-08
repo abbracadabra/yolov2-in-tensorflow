@@ -1,22 +1,24 @@
 import tensorflow as tf
 from config import *
 import numpy as np
+from util import *
 
 detector_inp = tf.placeholder(dtype=tf.float32,shape=[None,None,None,512],name='input')#[None,7,7,512]
 ts = tf.shape(detector_inp)[:3]#[None,7,7]
-th = tf.cast(tf.shape(detector_inp)[1],tf.float32)
+th = tf.cast(tf.shape(detector_inp)[1],tf.float32)#7
 xy_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])
 wh_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,2])
 mask_box = tf.placeholder(dtype=tf.float32,shape=[None,None,None,5,1])
 box_num = tf.maximum(tf.reduce_sum(mask_box),1.)
 cls_t = tf.placeholder(dtype=tf.float32,shape=[None,None,None,20])
-coordxy_t = (xy_t+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th)),axis=-1),axis=2))/th#[None,7,7,5,2]
+coordxy_t = (xy_t+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th),indexing='xy'),axis=-1),axis=2))/th#[None,7,7,5,2]
 lf_t = coordxy_t-wh_t/2#[None,7,7,5,2]
 rt_t = coordxy_t+wh_t/2#[None,7,7,5,2]
 
 detector_out = tf.layers.conv2d(detector_inp,45,(1,1))#[None,7,7,45]
+detector_out = tf.concat([detector_out[...,:10]/50,detector_out[...,10:20]/50,detector_out[...,20:25]/50,detector_out[...,25:]/50],axis=-1)#ease gradient vanishing/exploding at beginning
 xy = tf.sigmoid(tf.reshape(detector_out[...,0:10],tf.concat([ts,[5,2]],axis=0)))#[None,7,7,5,2]
-wh = tf.exp(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0))/50)*np.array(anchors)#[None,7,7,5,2]
+wh = tf.exp(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0)))*np.array(anchors)#[None,7,7,5,2]
 iou_p = tf.sigmoid(tf.reshape(detector_out[...,20:25],tf.concat([ts,[5]],axis=0)))#[None,7,7,5]
 cls = tf.nn.softmax(detector_out[...,25:])#[None,7,7,20]
 

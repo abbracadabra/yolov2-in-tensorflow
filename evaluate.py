@@ -12,19 +12,19 @@ sess = tf.Session()
 saver = tf.train.Saver()
 saver.restore(sess,model_path)
 
-im,nw,nh = preparetest(r'D:\Users\yl_gong\Desktop\dl\voc\sss\2007_001558.jpg',224)
+im,nw,nh = preparetest(r'D:\Users\yl_gong\Desktop\dl\voc\zzz\2007_000121.jpg',224)
 vgg16 = keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_tensor=None, input_shape=None, pooling=None)
 _inp = vgg16.predict(keras.applications.vgg16.preprocess_input(np.array([im])),batch_size=1)
 _xy,_wh,_iou,_cls = sess.run([xy,wh,iou_p,cls],feed_dict={detector_inp:_inp})
 
-grid=np.meshgrid(np.arange(7),np.arange(7),indexing='ij')
-_xy = np.reshape(_xy/7+np.expand_dims(np.stack(grid,axis=-1)*(1/7),axis=2),[-1,2])
+grid=np.meshgrid(np.arange(7),np.arange(7),indexing='xy')
+_xy = np.reshape(_xy/7+np.expand_dims(np.stack(grid,axis=-1)/7,axis=2),[-1,2])
 _wh = np.reshape(_wh,[-1,2])
 _clsprob = np.max(_cls,axis=-1,keepdims=True)#[none,7,7,1]
-score = np.reshape(_iou*_clsprob,[-1])#[none,7,7,5]
+score = np.reshape(_iou,[-1])#[none,7,7,5]
 _cls = np.reshape(np.tile(np.expand_dims(np.argmax(_cls,axis=-1),axis=-1),[1,1,1,5]),[-1])
 pack = [z for z in zip(score,_xy,_cls,_wh)]
-pack = [z for z in pack if z[0]>0.1 and z[3][0]>0.01 and z[3][1]>0.01]
+pack = [z for z in pack if z[0]>0.5]
 pack = [pack[i] for i in np.argsort([z[0] for z in pack])[::-1]]
 print(pack)
 print(len(pack))

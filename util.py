@@ -8,6 +8,13 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+def linear(tensor,alpha,constant):
+    return alpha*tensor+constant
+
+def linearsigmoid(tensor):
+    return linear(tensor,1/100,1/2)
+
+
 def loadlabel(lbpath,flip=False):
     mp={}
     tree = ET.parse(os.path.join(voclabeldir,lbpath))

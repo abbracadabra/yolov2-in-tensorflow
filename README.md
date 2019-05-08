@@ -1,6 +1,6 @@
 ## about model
 - implementation of yolov2 concepts,but not 100% in accordance with every detail
-- vgg16 as image decoder
+- vgg16 as image encoder
 - trained on voc2012 for 2 epochs
 - 7\*7 total cells in detection layer,5 box predictors in each cell,total detection layer size is 7\*7\*(5\*5+20)
 

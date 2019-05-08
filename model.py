@@ -15,18 +15,17 @@ coordxy_t = (xy_t+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th),
 lf_t = coordxy_t-wh_t/2#[None,7,7,5,2]
 rt_t = coordxy_t+wh_t/2#[None,7,7,5,2]
 
-detector_out = tf.layers.conv2d(detector_inp,45,(1,1))#[None,7,7,45]
-detector_out = tf.concat([detector_out[...,:10]/50,detector_out[...,10:20]/50,detector_out[...,20:25]/50,detector_out[...,25:]/50],axis=-1)#ease gradient vanishing/exploding at beginning
-xy = tf.sigmoid(tf.reshape(detector_out[...,0:10],tf.concat([ts,[5,2]],axis=0)))#[None,7,7,5,2]
+detector_out = tf.layers.conv2d(detector_inp,45,(1,1),kernel_initializer=tf.truncated_normal_initializer(stddev=0.001))/50#[None,7,7,45] ease gradient vanishing/exploding
+xy = tf.reshape(detector_out[...,0:10],tf.concat([ts,[5,2]],axis=0))/2+0.5#[None,7,7,5,2] linear sigmoid addressing gradient vanishing?
 wh = tf.exp(tf.reshape(detector_out[...,10:20],tf.concat([ts,[5,2]],axis=0)))*np.array(anchors)#[None,7,7,5,2]
-iou_p = tf.sigmoid(tf.reshape(detector_out[...,20:25],tf.concat([ts,[5]],axis=0)))#[None,7,7,5]
+iou_p = tf.reshape(detector_out[...,20:25],tf.concat([ts,[5]],axis=0))/2+0.5#[None,7,7,5] linear sigmoid addressing gradient vanishing?
 cls = tf.nn.softmax(detector_out[...,25:])#[None,7,7,20]
 
 xyerr = tf.reduce_sum((xy-xy_t)**2 * mask_box)/box_num
 wherr = tf.reduce_sum((wh-wh_t)**2 * mask_box)/box_num
 clserr = tf.reduce_sum((cls-cls_t)**2 * cls_t)/box_num
 
-coordxy = (xy+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th)),axis=-1),axis=2))/th#[None,7,7,5,2]
+coordxy = (xy+tf.expand_dims(tf.stack(tf.meshgrid(tf.range(th),tf.range(th),indexing='xy'),axis=-1),axis=2))/th#[None,7,7,5,2]
 lf = coordxy-wh/2#[None,7,7,5,2]
 rt = coordxy+wh/2#[None,7,7,5,2]
 sectwh = tf.minimum(rt_t,rt)-tf.maximum(lf_t,lf)#[None,7,7,5,2]
@@ -35,7 +34,7 @@ sect = tf.multiply(*tf.unstack(sectwh,axis=-1))\
 union = tf.maximum(tf.multiply(*tf.unstack(rt-lf,axis=-1))+tf.multiply(*tf.unstack(rt_t-lf_t,axis=-1))-sect,1e-5)#[None,7,7,5]
 iou_t = sect/union#[None,7,7,5]
 mask_box_s = tf.squeeze(mask_box)#[None,7,7,5]
-iouerr = tf.reduce_mean((iou_p-iou_t)**2 * tf.where(tf.equal(mask_box_s,1.),mask_box_s,tf.ones_like(mask_box_s)*0.5))
+iouerr = tf.reduce_mean((iou_p-iou_t)**2 * tf.where(tf.equal(mask_box_s,1.),mask_box_s*3,tf.ones_like(mask_box_s)*0.3))
 
 allerr = xyerr+wherr+clserr+iouerr
 

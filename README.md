@@ -11,7 +11,7 @@
 
 ## things i tried
 - dividing detection layer logits by scalar to reduce magnitude before activation,this might ease gradient vanishing
-- linear activation instead of sigmoid for iou predication to ease gradient vanishing because ground truth iou and iou prediction are often near zero due to poor xy and wh prediction at early stage of training.But sometimes linear activation might deviate far from [0,1],making loss explode.
+- linear activation instead of sigmoid for iou predication to ease gradient vanishing because ground truth iou and iou prediction are often near zero due to poor xy and wh prediction at early stage of training.Although sometimes linear activation might deviate far from [0,1],making loss explode.
 
 ## some random non cherry-picked test examples
 <div>

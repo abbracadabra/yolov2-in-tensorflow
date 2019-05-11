@@ -9,6 +9,10 @@
 - evaluate.py #predict
 - config.py #config
 
+## things i tried
+- dividing detection layer logits by scalar to reduce magnitude before activation,this might ease gradient vanishing
+- linear activation instead of sigmoid for iou predication to ease gradient vanishing because ground truth iou and iou prediction are often near zero due to poor xy and wh prediction at early stage of training.But sometimes linear activation might deviate far from [0,1],making loss explode.
+
 ## some random non cherry-picked test examples
 <div>
 <img src='https://user-images.githubusercontent.com/35487258/57367790-4a8c2680-71bc-11e9-9f0e-28b6942e9339.jpg'>
